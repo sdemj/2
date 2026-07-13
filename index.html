@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔔 도전! 독서 골든벨 🔔</title>
+    <style>
+        /* 1. 화면 세로 크기를 100vh로 고정하여 스크롤 차단 */
+        body { 
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; 
+            background: radial-gradient(circle, #ffeb3b 10%, #fbc02d 90%);
+            text-align: center; 
+            margin: 0; 
+            padding: 2vh 2vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            overflow: hidden; 
+        }
+
+        /* 2. 대형 컨테이너 박스 (기존 비율 유지) */
+        .container { 
+            width: 98%;
+            max-width: 1400px; 
+            height: 94vh; 
+            background: rgba(255, 255, 255, 0.98); 
+            padding: 3vh 4vw; 
+            border-radius: 40px; 
+            box-shadow: 0 25px 60px rgba(230, 124, 0, 0.3); 
+            border: 8px solid #e65100; 
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; 
+            position: relative;
+        }
+
+        /* 3. 첫 화면 전용 스타일 (1.png 이미지로 전체 화면 꽉 채우기) */
+        .intro-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 30px; /* 대형 박스 안쪽 둥글기에 맞춤 */
+        }
+
+        /* 첫 화면 메인 이미지 (첫 화면 영역을 100% 꽉 채움) */
+        .main-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지가 찌그러지지 않고 영역을 가득 채우도록 설정 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        /* 작고 깔끔하게 다듬은 시작 버튼 (오른쪽 아래 배치) */
+        .btn-start-next {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 28px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: white;
+            background: linear-gradient(135deg, #ffca28, #ff8f00);
+            border: 3px solid #ffffff;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #e65100, 0 8px 15px rgba(230, 81, 0, 0.3);
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 2; /* 이미지 위로 올라오도록 설정 */
+        }
+        .btn-start-next:hover {
+            transform: translateY(1px);
+            box-shadow: 0 4px 0 #e65100, 0 6px 12px rgba(230, 81, 0, 0.3);
+        }
+        .btn-start-next:active {
+            transform: translateY(5px);
+            box-shadow: 0 0px 0 #e65100, 0 2px 5px rgba(230, 81, 0, 0.2);
+        }
+
+        /* 4. 퀴즈 플레이 화면 스타일 */
+        .header-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            border-bottom: 3px dashed #ffe082;
+            padding-bottom: 1.5vh;
+            flex-shrink: 0;
+        }
+        .quiz-type { 
+            display: inline-block; 
+            padding: 1vh 3vw; 
+            background: linear-gradient(135deg, #d32f2f, #b71c1c); 
+            color: #ffffff; 
+            font-weight: 900; 
+            font-size: 1.8rem; 
+            border-radius: 50px; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            border: 3px solid #fff;
+        }
+        .top-nav { display: flex; gap: 15px; }
+        .btn-mini {
+            width: 60px; height: 60px; font-size: 1.8rem; border: 2px solid #fff;
+            border-radius: 50%; color: white; cursor: pointer; display: flex;
+            justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+        .btn-mini:hover { transform: scale(1.1); }
+        .btn-answer { background: linear-gradient(135deg, #ff9800, #e65100); }
+        .btn-next { background: linear-gradient(135deg, #4caf50, #1b5e20); }
+
+        .question { 
+            font-size: 3.8rem; margin: 2vh 0; font-weight: 800; color: #1a2a6c; line-height: 1.5; 
+            word-break: keep-all; letter-spacing: -1px; flex-grow: 1; display: flex;
+            align-items: center; justify-content: center; 
+        }
+        .choices { display: flex; flex-direction: column; gap: 2vh; align-items: center; width: 100%; flex-shrink: 0; }
+        .choice-item { 
+            width: 100%; max-width: 1200px; padding: 2.5vh 4vw; font-size: 2.6rem; border: 4px solid #ef6c00; 
+            border-radius: 24px; background: #fff8e1; color: #d84315; text-align: center; font-weight: 800; 
+            box-shadow: 0 6px 0 #e65100, 0 8px 15px rgba(0,0,0,0.05); box-sizing: border-box;
+            user-select: none; pointer-events: none; transition: all 0.3s ease;
+        }
+        .choice-item.is-correct {
+            background: linear-gradient(135deg, #ebfbee, #d3f9d8) !important; border-color: #2b8a3e !important;
+            color: #2b8a3e !important; box-shadow: 0 6px 0 #2b8a3e, 0 8px 20px rgba(43, 138, 62, 0.3) !important;
+            transform: scale(1.02);
+        }
+        .answer-box { 
+            position: absolute; bottom: 3vh; left: 50%; transform: translateX(-50%); width: 90%; max-width: 1200px;
+            font-size: 3.8rem; color: #b71c1c; font-weight: 900; padding: 2.5vh; background: #ffebee; 
+            border-radius: 25px; display: none; border: 5px dashed #d32f2f; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-sizing: border-box; z-index: 10; animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popUp {
+            0% { transform: translate(-50%, 20px) scale(0.9); opacity: 0; }
+            100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="quiz-container">
+    
+    <div id="intro-view" class="intro-content">
+        <img src="1.png" alt="도전 골든벨" class="main-img">
+        
+        <button class="btn-start-next" onclick="startQuiz()">시작</button>
+    </div>
+
+    <div id="quiz-view" style="display: none; flex-direction: column; justify-content: space-between; height: 100%; width: 100%;">
+        <div class="header-box">
+            <div class="quiz-type" id="quiz-type">로딩중</div>
+            <div class="top-nav">
+                <button class="btn-mini btn-answer" onclick="showAnswer()" title="정답 확인">🔔</button>
+                <button class="btn-mini btn-next" onclick="nextQuestion()" title="다음 문제">▶</button>
+            </div>
+        </div>
+        
+        <div class="question" id="question-text">문제를 불러오는 중입니다...</div>
+        <div class="choices" id="choices-area"></div>
+        <div class="answer-box" id="answer-text">정답 ✨: </div>
+    </div>
+</div>
+
+<script>
+    // '안녕 삐삐' 독서 골든벨 문제 리스트 (PDF 기반 탑재)
+    const quizData = [
+        { type: "객관식", q: "뒤죽박죽 별장 옆에 사는 남자아이의 이름은 무엇일까요?", choices: ["① 빌리", "② 토미", "③ 피터", "④ 마크"], a: "② 토미" },
+        { type: "객관식", q: "아니카는 그루터기에서 무엇을 발견했나요?", choices: ["① 반짝이는 은동전", "② 빨간 산호 목걸이", "③ 오래된 나침반", "④ 비밀 편지"], a: "② 빨간 산호 목걸이" },
+        { type: "객관식", q: "삐삐는 학교에 가려고 몇 시에 출발했나요?", choices: ["① 8시", "② 9시", "③ 10시", "④ 11시"], a: "③ 10시" },
+        { type: "객관식", q: "아돌프와 삐삐 중에 누가 레슬링에서 이겼나요?", choices: ["① 삐삐", "② 아돌프", "③ 무승부", "④ 둘 다 기권함"], a: "① 삐삐" },
+        { type: "객관식", q: "어른들의 다과회에서 커피를 배식할 때 삐삐는 각설탕을 몇 개나 넣었나요?", choices: ["① 1개", "② 3개", "③ 5개", "④ 10개"], a: "③ 5개" },
+        { type: "객관식", q: "불이 난 곳은 어느 건물이었나요?", choices: ["① 단층 주택", "② 고층 건물(아파트)", "③ 학교 강당", "④ 동물원 서커스장"], a: "② 고층 건물" },
+        { type: "객관식", q: "비밀 장소로 정한 나무는 무슨 나무였을까요?", choices: ["① 은행나무", "② 버드나무", "③ 떡갈나무", "④ 사과나무"], a: "③ 떡갈나무" },
+        { type: "객관식", q: "할머니에게 서커스 표를 구할 때 삐삐는 돈 대신 무엇을 주었나요?", choices: ["① 금덩이", "② 은화", "③ 다이아몬드", "④ 보물지도"], a: "① 금덩이" },
+        { type: "객관식", q: "삐삐는 커서 무엇이 될 거라고 말했나요?", choices: ["① 서커스 단장", "② 학교 선생님", "③ 해적", "④ 경찰관"], a: "③ 해적" },
+        { type: "객관식", q: "서커스단에 있던 도둑 중 첫 번째 도둑의 이름은 무엇일까요?", choices: ["① 블룸", "② 칼슨", "③ 톰", "④ 한스"], a: "② 칼슨" },
+        { type: "객관식", q: "삐삐가 귀병에 좋다면서 귀에 부은 것은 무엇인가요?", choices: ["① 따뜻한 물", "② 우유", "③ 과일주스", "④ 기름"], a: "② 우유" },
+        { type: "객관식", q: "고층 건물에 불이 났을 때 다락방에 갇혀 있던 아이들은 모두 몇 명이었나요?", choices: ["① 1명", "② 2명", "③ 3명", "④ 4명"], a: "② 2명" },
+        { type: "객관식", q: "토미와 아니카가 학교에 안 가도 되는 이유는 무엇이었나요?", choices: ["① 대청소", "② 선생님 출장", "③ 개교기념일", "④ 소풍"], a: "① 대청소" },
+        { type: "객관식", q: "황소는 삐삐가 뿔을 부러뜨려도 아파하지 않았습니다. 그 이유는 무엇일까요?", choices: ["① 원래 힘이 엄청 세서", "② 기절해 있어서", "③ 뿔에는 감각이 없어서", "④ 화가 머리끝까지 나서"], a: "③ 뿔에는 감각이 없어서" },
+        { type: "객관식", q: "삐삐가 한밤중에 집에 들어온 도둑들과 함께 신나게 춘 춤의 이름은 무엇인가요?", choices: ["① 발레", "② 왈츠", "③ 힙합", "④ 폴카"], a: "④ 폴카" },
+        { type: "객관식", q: "서커스단에서 말을 타던 유명한 할머니는 어느 나라에서 오셨나요?", choices: ["① 스웨덴", "② 덴마크", "③ 노르웨이", "④ 프랑스"], a: "① 스웨덴" },
+        { type: "객관식", q: "불이 난 건물의 아이들을 구하기 위해 삐삐는 무엇을 가져왔나요?", choices: ["① 사다리", "② 밧줄", "③ 널빤지", "④ 미끄럼틀"], a: "③ 널빤지" },
+        { type: "객관식", q: "삐삐가 심술궂은 아이를 장난감 수레에 처박아 버린 이유는 무엇일까요?", choices: ["① 자기 수레를 훔쳐서", "② 숙녀(아니카)에게 예의가 없어서", "③ 짜증나서", "④ 닐슨 씨를 괴롭혀서"], a: "② 숙녀에게 예의가 없어서" },
+        { type: "객관식", q: "삐삐가 자기를 소개한 말을 완성해 봅시다. \"나는 ㄷㅅㅈㅇㅈ입니다\"", choices: ["① 독신주의자", "② 독삭제우자", "③ 독사주으자", "④ 독재주의자"], a: "① 독신주의자" },
+        { type: "객관식", q: "삐삐가 팬케이크를 던질 때 팬케이크는 어디에 닿을 만큼 올라갔나요?", choices: ["① 하늘", "② 우주", "③ 천장", "④ 땅밑"], a: "③ 천장" },
+        { type: "객관식", q: "선생님께서 그림 그리기는 그만두고 이제 '이것'을 하자고 하셨습니다. 무엇일까요?", choices: ["① 체육", "② 요리", "③ 청소", "④ 노래"], a: "④ 노래" },
+        { type: "객관식", q: "다과회에서 어른 부인들이 크게 실망하고 화가 난 까닭은 무엇일까요?", choices: ["① 부인 한 명이 케이크를 다 먹어서", "② 삐삐가 케이크를 혼자 다 먹어서", "③ 생쥐들이 케이크를 다 먹어서", "④ 케이크가 너무 맛이 없어서"], a: "② 삐삐가 케이크를 혼자 다 먹어서" },
+        { type: "객관식", q: "삐삐가 키우는 원숭이의 이름은 무엇인가요?", choices: ["① 철수 씨", "② 닐슨 씨", "③ 토미 씨", "④ 칼슨 씨"], a: "② 닐슨 씨" },
+        { type: "객관식", q: "브라질 사람들이 탈모 예방을 위해 머리에 바르고 다니는 것은 무엇일까요?", choices: ["① 마요네즈", "② 간장", "③ 달걀", "④ 샴푸"], a: "③ 달걀" },
+        { type: "객관식", q: "삐삐가 과테말라 사람들은 잘 때 어떻게 잔다고 했나요?", choices: ["① 거꾸로 매달려 잔다", "② 발가락을 꼼지락거리며 잔다", "③ 눈을 뜨고 잔다", "④ 노래를 부르며 잔다"], a: "② 발가락을 꼼지락거리며 잔다" },
+        { type: "객관식", q: "아돌프와의 씨름 대결에서 이기면 서커스 단장이 주겠다고 한 상금은 얼마였을까요?", choices: ["① 10크로나", "② 50크로나", "③ 100크로나", "④ 500크로나"], a: "③ 100크로나" },
+        { type: "주관식", q: "삐삐가 거실 벽지에다가 그린 그림은 무엇인가요?", a: "뚱뚱한 부인" },
+        { type: "주관식", q: "삐삐의 엄마는 천사이고 아빠는 바다 저편의 무엇인가요?", a: "식인종 (또는 식인종 왕)" },
+        { type: "주관식", q: "토미와 아니카와 삐삐가 처음 만난 날 삐삐가 집으로 돌아갈 때 어떻게 걸어갔나요?", a: "뒤로 (또는 거꾸로)" },
+        { type: "주관식", q: "아홉 살짜리 주근깨 소녀인 삐삐가 혼자 살고 있는 집의 이름은 무엇인가요?", a: "뒤죽박죽 별장" },
+        { type: "주관식", q: "선생님이 삐삐에게 8+4가 무엇인지 물었을 때 삐삐가 대답한 엉뚱한 숫자는 무엇인가요?", a: "67" },
+        { type: "주관식", q: "토미와 아니카가 뒤죽박죽 별장에 처음 놀러 갔을 때 삐삐가 대접한 음식은 무엇인가요?", a: "팬케이크" },
+        { type: "주관식", q: "토미와 아니카가 놀러 오려고 씻고 있을 때 삐삐가 부엌 바닥에서 만든 과자는 무슨 모양이었나요?", a: "하트 모양" },
+        { type: "주관식", q: "정원에서 '발견놀이'를 하던 삐삐가 가장 첫 번째로 찾아낸 물건은 무엇인가요?", a: "양철통" },
+        { type: "주관식", q: "삐삐를 어린이집에 보내려고 지붕 위까지 쫓아왔던 경찰관들은 무엇이 없어서 내려가지 못했나요?", a: "사다리" },
+        { type: "주관식", q: "삐삐는 자신의 생일 파티에 누구와 누구를 초대했나요?", a: "토미, 아니카 (순서 상관없음)" },
+        { type: "주관식", q: "삐삐가 학교를 그만두고 떠나면서 선생님에게 감사하다며 드린 선물은 무엇인가요?", a: "금시계" },
+        { type: "주관식", q: "엄마들이 모인 다과회에 가느라 토미와 아니카가 놀지 못할 때 삐삐가 원숭이 닐슨 씨에게 챙겨준 음식 두 가지는 무엇인가요?", a: "과일주스와 롤빵" },
+        { type: "주관식", q: "아니카와 토미가 삐삐의 생일 선물로 준비해 온 것은 무엇인가요?", a: "음악상자" },
+        { type: "주관식", q: "삐삐가 맨발에 하나씩 묶고 마룻바닥 위를 스케이트 타듯 돌아다니며 청소할 때 쓴 도구는 무엇인가요?", a: "솔 (또는 솔 두 개)" },
+        { type: "주관식", q: "삐삐가 다락방에 무서운 '이것'과 '이것'이 살고 있다고 말했는데 이것들은 무엇인가요?", a: "유령, 도깨비 (순서 상관없음)" },
+        { type: "주관식", q: "삐삐가 이야기한 하이 상의 막내아들 이름은 무엇이었습니까?", a: "피터" },
+        { type: "주관식", q: "삐삐가 벽에 그린 '뚱뚱한 부인' 그림에서 부인은 양손에 각각 무엇을 들고 있었나요?", a: "노란 꽃, 죽은 쥐 (순서 상관없음)" },
+        { type: "주관식", q: "소방대 대원과 광장에 모인 사람들이 삐삐에게 만세삼창을 외친 까닭은 무엇인가요?", a: "아이들을 구해 주었기 때문 (의미가 통하면 정답)" },
+        { type: "주관식", q: "서커스 단장의 예쁜 딸 이름은 무엇일까요?", a: "엘비라 양 (또는 엘비라)" },
+        { type: "주관식", q: "삐삐와 뒤죽박죽 별장에서 함께 살고 있는 동물 두 가지는 무엇인가요?", a: "원숭이, 말 (순서 상관없음)" },
+        { type: "주관식", q: "그림 그리기 시간에 선생님이 삐삐에게 소리를 지른 이유는 무엇인가요?", a: "도화지가 아닌 바닥에 그림을 그렸기 때문 (의미가 통하면 정답)" },
+        { type: "주관식", q: "삐삐가 다과회에서 \"OO은 절대로 침대 밑을 쓸지 않았어요!\"라며 흉을 본 하녀의 이름은 무엇일까요?", a: "말린" },
+        { type: "주관식", q: "불이 난 고층 건물 옆 나무 꼭대기에서 다락방 창문까지의 거리는 몇 미터였나요?", a: "3미터 (또는 3m)" },
+        { type: "주관식", q: "도둑들은 삐삐의 집에 무엇을 훔치러 들어왔나요?", a: "금화 (또는 금화가 든 가방/돈 가방)" },
+        { type: "주관식", q: "생일 파티에 갈 때 아니카의 엄마가 가장 좋은 옷을 입지 못하게 말린 이유는 무엇인가요?", a: "삐삐 집에 갔다가 옷을 더럽히지 않고 돌아온 적이 없어서 (의미가 통하면 정답)" }
+    ];
+
+    let currentIndex = 0;
+
+    // 화면 전환 함수
+    function startQuiz() {
+        document.getElementById("intro-view").style.display = "none";
+        document.getElementById("quiz-view").style.display = "flex";
+        loadQuiz();
+    }
+
+    function loadQuiz() {
+        if (quizData.length === 0) return;
+        const currentQuiz = quizData[currentIndex];
+        
+        document.getElementById("quiz-type").innerText = `🏆 문제 ${currentIndex + 1} / ${quizData.length} (${currentQuiz.type})`;
+        document.getElementById("question-text").innerText = currentQuiz.q;
+        
+        document.getElementById("answer-text").style.display = "none";
+        document.getElementById("answer-text").innerText = "정답 ✨ : " + currentQuiz.a;
+
+        const choicesArea = document.getElementById("choices-area");
+        
+        if(currentQuiz.type === "객관식") {
+            choicesArea.style.display = "flex";
+            choicesArea.innerHTML = "";
+            
+            currentQuiz.choices.forEach(choice => {
+                choicesArea.innerHTML += `<div class="choice-item" data-text="${choice.trim()}">${choice.trim()}</div>`;
+            });
+        } else {
+            choicesArea.style.display = "none";
+        }
+    }
+
+    function showAnswer() {
+        const currentQuiz = quizData[currentIndex];
+        
+        if(currentQuiz.type === "객관식") {
+            const correctAnswerText = currentQuiz.a.replace(/^[①②③④]\s*/, "").trim(); 
+            const choiceItems = document.querySelectorAll(".choice-item");
+            
+            choiceItems.forEach(item => {
+                const itemText = item.getAttribute("data-text");
+                if(itemText && itemText.includes(correctAnswerText)) {
+                    item.classList.add("is-correct");
+                }
+            });
+        } else {
+            document.getElementById("answer-text").style.display = "block";
+        }
+    }
+
+    function nextQuestion() {
+        if(currentIndex < quizData.length - 1) {
+            currentIndex++;
+            loadQuiz();
+        } else {
+            alert("축하합니다! 모든 문제를 다 풀었습니다. 명예의 전당에 등극했습니다! 🔔🏆");
+        }
+    }
+</script>
+</body>
+</html>
