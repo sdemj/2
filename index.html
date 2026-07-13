@@ -25,7 +25,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between; 
-    position: relative;
+    position: absolute;
     transform-origin: center center; /* 정중앙 기준 확대/축소 */
 }
 
@@ -339,18 +339,21 @@ function showAnswer() {
     }
 // 스케일 조절 함수 추가
 function resizeGame() {
-    const container = document.getElementById('quiz-container');
+    const container = document.getElementById('quiz-container'); // 혹은 .container
+    if (!container) return;
+
     const winW = window.innerWidth;
     const winH = window.innerHeight;
     
-    // 기준이 되는 1200x800은 CSS에서 설정한 .container 크기와 일치해야 합니다.
-    const targetW = 1200;
-    const targetH = 800;
-    
-    // 0.95는 화면 꽉 차는 것을 방지하기 위한 약간의 여백입니다.
-    const scale = Math.min(winW / targetW, winH / targetH) * 0.95;
-    
+    // 비율 계산
+    const scaleX = winW / 1200;
+    const scaleY = winH / 800;
+    const scale = Math.min(scaleX, scaleY); // 가로/세로 중 더 작은 쪽에 맞춤
+
+    // 1. scale 적용
+    // 2. transform-origin을 강제로 센터로 고정
     container.style.transform = `scale(${scale})`;
+    container.style.transformOrigin = "center center"; 
 }
 
 // 1. 창 크기가 바뀔 때마다 실행
