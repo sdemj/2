@@ -214,7 +214,7 @@ body {
         
         <div class="question" id="question-text">문제를 불러오는 중입니다...</div>
         <div class="choices" id="choices-area"></div>
-        <div class="answer-box" id="answer-text">정답 ✨: </div>
+        <div class="answer-box" id="answer-text">정답: </div>
     </div>
 
     <div id="result-view" style="display: none; flex-direction: column; justify-content: center; align-items: center; height: 100%; width: 100%; gap: 3vh;">
@@ -286,7 +286,7 @@ shuffleQuestions(quizData); // 시작할 때 문제를 섞어주는 코드를 �
         document.getElementById("question-text").innerText = currentQuiz.q;
         
         document.getElementById("answer-text").style.display = "none";
-        document.getElementById("answer-text").innerText = "정답 ✨ : " + currentQuiz.a;
+        document.getElementById("answer-text").innerText = "정답: " + currentQuiz.a;
 
         const choicesArea = document.getElementById("choices-area");
         
