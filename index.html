@@ -115,18 +115,20 @@ body {
         .btn-answer { background: linear-gradient(135deg, #ff9800, #e65100); }
         .btn-next { background: linear-gradient(135deg, #4caf50, #1b5e20); }
 
-        .question { 
-            font-size: 3.8rem; margin: 2vh 0; font-weight: 800; color: #1a2a6c; line-height: 1.5; 
-            word-break: keep-all; letter-spacing: -1px; flex-grow: 1; display: flex;
-            align-items: center; justify-content: center; 
-        }
-.choices { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 2vh; 
-    align-items: center; 
-    width: 100%; 
-    flex-shrink: 0; 
+.question {
+    font-size: 3.8rem;
+    margin: 2vh 0;
+    flex-grow: 1; /* 남는 공간을 차지함 */
+    display: flex;
+    align-items: center; /* 세로 정렬 */
+    justify-content: center;
+    overflow: hidden; /* 넘치는 텍스트 숨김 또는 제어 */
+    line-height: 1.2;
+}
+
+.choices {
+    flex-shrink: 0; /* 선택지는 크기가 줄어들지 않도록 고정 */
+    margin-bottom: 20px;
 }
 
 .choice-item { 
