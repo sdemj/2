@@ -7,7 +7,7 @@
     <style>
         /* 1. 화면 세로 크기를 100vh로 고정하여 스크롤 차단 */
 body { 
-    margin: 0; padding: 0; height: 100vh; overflow: hidden;
+    margin: 0; padding: 0; height: 100vh; width: 100vw; overflow: hidden;
     background: radial-gradient(circle, #ffeb3b 10%, #fbc02d 90%);
     display: flex; justify-content: center; align-items: center;
 }
@@ -114,7 +114,10 @@ body {
         .btn-mini:hover { transform: scale(1.1); }
         .btn-answer { background: linear-gradient(135deg, #ff9800, #e65100); }
         .btn-next { background: linear-gradient(135deg, #4caf50, #1b5e20); }
-
+#quiz-container {
+    transform-origin: center center; /* 컨테이너의 정중앙을 기준으로 줄어들게 함 */
+    transition: transform 0.1s ease-out; /* 줄어들 때 부드럽게 보이게 함 */
+}
 #quiz-view {
     display: flex; 
     flex-direction: column; 
@@ -226,9 +229,6 @@ body {
 </div>
 
 <script>
-
-const scale = Math.min(winW / targetW, winH / targetH);
-container.style.transform = `scale(${scale})`;
 const soundDing = new Audio('ding.mp4');     // 띵동 효과음
 const soundsp = new Audio('sp.mp4');
     const quizData = [
@@ -343,10 +343,13 @@ function resizeGame() {
     const winW = window.innerWidth;
     const winH = window.innerHeight;
     
-    // 1200x800 비율을 기준으로 배율 계산
-    const scale = Math.min((winW / 1200) * 0.95, (winH / 800) * 0.95);
+    // 기준이 되는 1200x800은 CSS에서 설정한 .container 크기와 일치해야 합니다.
+    const targetW = 1200;
+    const targetH = 800;
     
-    // 컨테이너에 스케일 적용
+    // 0.95는 화면 꽉 차는 것을 방지하기 위한 약간의 여백입니다.
+    const scale = Math.min(winW / targetW, winH / targetH) * 0.95;
+    
     container.style.transform = `scale(${scale})`;
 }
 
