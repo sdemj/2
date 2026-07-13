@@ -226,7 +226,9 @@ body {
 </div>
 
 <script>
-    // '안녕 삐삐' 독서 골든벨 문제 리스트 (PDF 기반 탑재)
+
+const scale = Math.min(winW / targetW, winH / targetH);
+container.style.transform = `scale(${scale})`;
 const soundDing = new Audio('ding.mp4');     // 띵동 효과음
 const soundsp = new Audio('sp.mp4');
     const quizData = [
